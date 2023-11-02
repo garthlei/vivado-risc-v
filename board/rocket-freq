@@ -35,6 +35,13 @@ u200          Rocket.*b[2-9][0-9].* 80.0
 u200          Rocket.*b1[0-9].*     100.0
 u200          Rocket.*              125.0
 
+s2c2v7        Rocket.*gem.*     31.25
+s2c2v7        Rocket64x[1-2]    50.0
+s2c2v7        Rocket64[xyz].*   31.25
+s2c2v7        Rocket.*l2w?      62.5
+s2c2v7        Rocket.*b[2-9].*  62.5
+s2c2v7        Rocket.*          80.0
+
 .*            Rocket.*gem.*     20.0
 .*            Rocket64[xyz].*   20.0
 .*            Rocket.*l2w?      31.25
