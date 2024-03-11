@@ -12,6 +12,7 @@
 #include <sbi_utils/fdt/fdt_domain.h>
 #include <sbi_utils/fdt/fdt_fixup.h>
 #include <sbi_utils/fdt/fdt_helper.h>
+#include <sbi_utils/fdt/fdt_pmu.h>
 #include <sbi_utils/irqchip/fdt_irqchip.h>
 #include <sbi_utils/serial/fdt_serial.h>
 #include <sbi_utils/timer/fdt_timer.h>
@@ -80,6 +81,39 @@ static int console_init(void) {
     return fdt_serial_init();
 }
 
+static int pmu_init(void)
+{
+    int rc;
+
+    rc = fdt_pmu_setup(fdt_get_address());
+    if (rc && rc != SBI_ENOENT)
+        return rc;
+
+    return 0;
+}
+
+static uint64_t pmu_xlate_to_mhpmevent(uint32_t event_idx,
+                           uint64_t data)
+{
+    uint64_t evt_val = 0;
+
+    /* data is valid only for raw events and is equal to event selector */
+    if (event_idx == SBI_PMU_EVENT_RAW_IDX)
+        evt_val = data;
+    else {
+        /**
+         * Generic platform follows the SBI specification recommendation
+         * i.e. zero extended event_idx is used as mhpmevent value for
+         * hardware general/cache events if platform does't define one.
+         */
+        evt_val = fdt_pmu_get_select_value(event_idx);
+        if (!evt_val)
+            evt_val = (uint64_t)event_idx;
+    }
+
+    return evt_val;
+}
+
 /* ---- Platform ---- */
 
 static u32 generic_hart_index2id[SBI_HARTMASK_MAX_BITS] = { 0 };
@@ -90,6 +124,8 @@ const struct sbi_platform_operations platform_ops = {
     .irqchip_exit = fdt_irqchip_exit,
     .ipi_init = fdt_ipi_init,
     .ipi_exit = fdt_ipi_exit,
+    .pmu_init = pmu_init,
+    .pmu_xlate_to_mhpmevent = pmu_xlate_to_mhpmevent,
     .timer_init = fdt_timer_init,
     .timer_exit = fdt_timer_exit,
 };
