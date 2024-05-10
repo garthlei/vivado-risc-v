@@ -4,6 +4,7 @@ import Chisel._
 import org.chipsalliance.cde.config.{Config, Field}
 import freechips.rocketchip.diplomacy._
 import freechips.rocketchip.subsystem._
+import boom.common.BoomTileAttachParams
 
 case class PMUParams(eventSetSizes: Seq[Int])
 
@@ -55,3 +56,14 @@ trait CanHavePMU { this: BaseSubsystem =>
     }
   })
 }
+
+// Taken from Chipyard
+class WithNPerfCounters(n: Int = 29) extends Config((site, here, up) => {
+  case TilesLocated(InSubsystem) => up(TilesLocated(InSubsystem), site) map {
+    case tp: RocketTileAttachParams => tp.copy(tileParams = tp.tileParams.copy(
+      core = tp.tileParams.core.copy(nPerfCounters = n)))
+    case tp: BoomTileAttachParams => tp.copy(tileParams = tp.tileParams.copy(
+      core = tp.tileParams.core.copy(nPerfCounters = n)))
+    case other => other
+  }
+})
