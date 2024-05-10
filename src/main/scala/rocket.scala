@@ -12,6 +12,7 @@ import freechips.rocketchip.system._
 
 class RocketSystem(implicit p: Parameters) extends RocketSubsystem
     with HasAsyncExtInterrupts
+    with CanHavePMU
     with CanHaveMasterAXI4MemPort
     with CanHaveMasterAXI4MMIOPort
     with CanHaveSlaveAXI4Port
@@ -331,6 +332,16 @@ class Rocket64x1 extends Config(
   new WithInclusiveCache  ++
   new WithNBreakpoints(8) ++
   new boom.common.WithNMediumBooms(1) ++
+  new RocketWideBusConfig)
+
+class Rocket64b1x1pmu extends Config(
+  new WithInclusiveCache  ++
+  new WithNBreakpoints(8) ++
+  new WithPMU(PMUParams(Seq(18, 11, 6, 5, 1))) ++
+  new WithNPerfCounters(12) ++
+  new boom.common.WithBoom2BPD ++
+  new boom.common.WithNMediumBooms(1) ++
+  new WithNBigCores(1) ++
   new RocketWideBusConfig)
 
 /* Note: multi-core BOOM appears unstable */
