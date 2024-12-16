@@ -11,9 +11,9 @@ Over 90% of packages of the whole Debian collection are available for download.
 
 Also can be used to run [bare-metal](https://github.com/eugene-tarassov/vivado-risc-v/tree/master/bare-metal) or RTOS software.
 
-The project is used as a reference design to validate RISC-V support in [Eclipse TCF](https://wiki.eclipse.org/TCF/RISC-V).
+The project is used as reference design to validate RISC-V support in [Eclipse TCF](https://wiki.eclipse.org/TCF/RISC-V).
 
-Latest AMD/Xilinx tools support debugging of RISC-V software over JTAG.
+AMD/Xilinx tools support debugging of RISC-V software over JTAG.
 
 # Prerequisites
 
@@ -31,7 +31,7 @@ KC705 and Genesys 2 are as fast as VC707, but have slightly smaller FPGA - up to
 
 Nexys Video is several times less expensive, academic discount is avaialble. It supports up to 2 cores, up to 50MHz clock speed.
 
-Nexys A7 100T and Arty A7 100T are least expensive supported boards. They have small FPGA, barely enough to run Linux on a single core RISC-V at 50MHz.
+Nexys A7 100T and Arty A7 100T are least expensive supported boards. They have small and slow FPGA, barely enough to run Linux on a single core RISC-V at 50MHz.
 
 ## Workstation
 [Ubuntu 20 LTS](https://ubuntu.com/download/desktop) machine with min 32GB RAM is recommended.
@@ -42,7 +42,7 @@ Alternatively, a Windows 10 machine with Ubuntu on Windows can be used to run th
 ## Software
 Download and install AMD/Xilinx
 [Vitis](https://www.xilinx.com/support/download/index.html/content/xilinx/en/downloadNav/vitis.html).
-Supported Vitis versions are 2020.2, 2021.1, 2021.2, 2022.1, 2022.2, 2023.1, 2023.2.
+Supported Vitis versions are 2020.2, 2021.1, 2021.2, 2022.1, 2022.2, 2023.1, 2023.2, 2024.1, 2024.2.
 Vitis installation includes Vivado Design Suite - there is no need to install Vivado separately.
 
 Nexys Video, Nexys A7 100T and Arty A7 100T are supported by free version of Vivado. KC705, VC707 and Genesys 2 require Vivado license.
@@ -62,7 +62,7 @@ make update-submodules
 
 ## Build FPGA bitstream
 ```
-source /opt/Xilinx/Vivado/2022.2/settings64.sh
+source /opt/Xilinx/Vivado/2024.2/settings64.sh
 make CONFIG=rocket64b2 BOARD=nexys-video bitstream
 ```
 For KC705, use `BOARD=kc705`
@@ -110,8 +110,8 @@ Use USB SD card reader to connect SD card to the workstation, and run:
 The script looks for USB memory device and asks confirmation before using it.
 Make sure to confirm right SD card device - all old data will be erased.
 
-## Booting Linux with QEMU
-In some cases when Linux runs slow on the FPGA (especially designs with lower clock speeds or no ethernet access), it might be worth it to first install the dependencies quickly before running it on FPGA.
+## Booting Linux with QEMU (optional)
+In some cases when Linux runs slow on the FPGA, especially designs with lower clock speeds or no ethernet access), it might be worth it to first install the dependencies quickly before running it on FPGA.
 
 You can run the following:
 ```
@@ -132,7 +132,7 @@ Once all this is done, you can make the sd card without making the image:
 
 ## Program the FPGA flash memory
 ```
-source /opt/Xilinx/Vivado/2022.2/settings64.sh
+source /opt/Xilinx/Vivado/2024.2/settings64.sh
 make CONFIG=rocket64b2 BOARD=nexys-video flash
 ```
 Alternatively, [flash memory can be programmed using Vivado GUI](docs/vivado-flash.md).
@@ -154,13 +154,13 @@ or, after Linux boot, over SSH:
 ssh debian@debian
 ```
 
-## Modding the design: adding a peripheral device
+## Modding the design (optional): adding a peripheral device
 
 ### Use Vivado Block Design to add an IP
 
 Open Vivado:
 ```
-source /opt/Xilinx/Vivado/2022.2/settings64.sh
+source /opt/Xilinx/Vivado/2024.2/settings64.sh
 make CONFIG=rocket64b2 BOARD=nexys-video vivado-gui
 ```
 The IO block in the design is the best place to add device controllers, like GPIO.
